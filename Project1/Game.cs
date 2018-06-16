@@ -145,7 +145,7 @@ namespace Project1
 
 
 
-                if (event1.type == Event::Closed || Event::KeyPressed && event.key.code == Keyboard.Escape)
+                if (event1.type == Event::Closed || Event::KeyPressed && event1.key.code == Keyboard::Escape)
                     state = GameState.END;
                 //game escape
 
@@ -306,16 +306,16 @@ namespace Project1
             while (state == GameState.GAME_OVER)
             {
 
-                Vector2f mouse(Mouse::getPosition(window));
+                Vector2f mouse(Mouse::getPosition(window) );
 
                 
-                while (window.pollEvent(event1))
-                {
-                    if (event.type == Event.Closed || Event::KeyPressed && event.key.code == Keyboard::Escape)
+                while (window.WaitAndDispatchEvents())
+                                                                                    {
+                    if (event1.type == Event.Closed || Event::KeyPressed && event1.Code == Keyboard::Escape)
                     state = END;
 
-                else if (powrot.getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased
-                        && event.key.code == Mouse::Left)
+                else if (powrot.getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased
+                        && event1.key.code == Mouse::Left)
                     state = MENU;
 
 
@@ -367,15 +367,15 @@ namespace Project1
             {
                 Vector2f mouse = new Vector2f(Mouse.GetPosition);
 
-                Event event;
+                Event event1;
 
-                while (window.pollEvent(event))
+                while (window.WaitAndDispatchEvents() )
                 {
-                    if (event.type == Event::Closed || Event::KeyPressed && event.key.code == Keyboard::Escape)
+                    if (event1.type == Event::Closed || Event::KeyPressed && event1.key.code == Keyboard::Escape)
                     Game.state = Game.GameState.END;
 
-                else if (powrot.getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased
-                        && event.key.code == Mouse::Left)
+                else if (powrot.getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased
+                        && event1.key.code == Mouse::Left)
                     state = MENU;
 
                 }
@@ -390,7 +390,7 @@ namespace Project1
                     poziom.setColor(Color::Red);
                 else poziom.setColor(Color::White);
 
-                if (poziom.getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Button::Left)
+                if (poziom.getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased && event1.key.code == Mouse::Button::Left)
             {
                     if (diff == 2) diff = 0;
                     else diff++;
@@ -428,9 +428,13 @@ namespace Project1
 
             const int ile = 3;
 
-            Text tekst[ile];
+            Text[] tekst;
+            tekst = new Text[ile];
+                                              
 
-            String str[] = { "Play", "Options", "Exit" };
+
+
+            String[] str = { "Play", "Options", "Exit" };
 
             for (int i = 0; i < ile; i++)
             {
@@ -447,21 +451,21 @@ namespace Project1
             while (state == MENU)
             {
 
-                Event event;
+                Event event1;
 
                 Vector2f mouse(Mouse::getPosition(window));
 
-                while (window.pollEvent(event))
-                {
-                    if (event.type == Event::Closed || Event::KeyPressed && event.key.code == Keyboard::Escape)
+                while (window.WaitAndDispatchEvents())
+                                                                                                    {
+                    if (event1.type == Event::Closed || Event::KeyPressed && event1.key.code == Keyboard::Escape)
                     state = END;
 
-                else if (tekst[2].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased
-                        && event.key.code == Mouse::Left)
+                else if (tekst[2].getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased
+                        && event1.key.code == Mouse::Left)
                     state = END;
-                    if (tekst[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+                    if (tekst[0].getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased && event1.key.code == Mouse::Left)
                     state = GAME;
-                    if (tekst[1].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+                    if (tekst[1].getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased && event1.key.code == Mouse::Left)
                     state = OPTIONS;
 
                 }
@@ -486,4 +490,5 @@ namespace Project1
          }
 
     }
+}
 }
