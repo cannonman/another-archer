@@ -45,12 +45,12 @@ using SFML.Window;
     }
 
 
-    void release()
+    public void release()
     {
     released = true;
 }
 
-    Sprite getSprite()
+    public Sprite getSprite()
     {
         return aSprite;
     }
@@ -65,7 +65,7 @@ using SFML.Window;
         angle += (float)2.5;
     }
 
-    void setAngle(float angle)
+    public void setAngle(float angle)
     {
         aSprite.Rotation = (angle);
     }
@@ -75,7 +75,7 @@ using SFML.Window;
         released = false;
     }
 
-    bool ifReleased()
+    public bool ifReleased()
     {
         return released;
     }

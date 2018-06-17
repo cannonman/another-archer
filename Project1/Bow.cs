@@ -19,7 +19,7 @@ namespace Project1
 
         }
         
-        Sprite getSprite()
+        public Sprite getSprite()
         {
             return bSprite;
         }
@@ -36,7 +36,7 @@ namespace Project1
             angle += (float)2.5;
         }
 
-        void setAngle(float angle)
+        public void setAngle(float angle)
         {
             bSprite.Rotation = (angle);
         }

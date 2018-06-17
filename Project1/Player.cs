@@ -29,7 +29,7 @@ namespace Project1
         pozycja = new Vector2f(startX, startY);
     }
 
-    Sprite getSpirte()
+    public Sprite getSpirte()
     {
         return pSprite;
     }

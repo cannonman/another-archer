@@ -1,3 +1,4 @@
+﻿#region Biblioteki
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,13 @@ using Project1;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-
+#endregion
 
 namespace Project1
 {
     public class Game
     {
+        #region Deklaracje
         const int FRAMERATE = 30;
 
         public enum GameState { MENU, OPTIONS, GAME, GAME_OVER, END, TARGETHIT};
@@ -40,7 +42,9 @@ namespace Project1
         Bow luk;
         Arrow strzala = new Arrow(84, 340);
         Target obiekt = new Target(550, 10);
-
+        const double ARROW_SPEED = 10.0;
+        const int MAX_ANGLE = -40;
+        const int MIN_ANGLE = 10;
         int a = 0;
         int score;
         float angle;
@@ -50,7 +54,7 @@ namespace Project1
         Event event1 = new Event();
 
         public RenderWindow window = new RenderWindow(new VideoMode(800, 600), "Archer the Game");
-
+        #endregion
 
         Game() { 
             state = GameState.END;
@@ -71,37 +75,7 @@ namespace Project1
         state = GameState.MENU;
         }
 
-        void Menu();
-        void gameStart();
-        void options();
-        void gameOver();
-
-         void runGame()
-        {
-
-        while (state != GameState.END)
-        {
-            switch (state)
-            {
-                case GameState.MENU:
-                    Menu();
-                    break;
-                case GameState.GAME:
-                    gameStart();
-                    break;
-                case GameState.OPTIONS:
-                    options();
-                    break;
-                case GameState.GAME_OVER:
-                    gameOver();
-                    break;
-
-            }
-        }
-
-         }
-
-         void gameStart()
+        void gameStart()
          {
 
         backgroundTexture = new Texture(@"jungle.png");
@@ -142,19 +116,19 @@ namespace Project1
             
 
 
-            while (window.WaitAndDispatchEvents() ) //wait for event
+            while (window.IsOpen) //wait for event
             {
 
-                vector.y = -ARROW_SPEED * (-sin((float)PI * (angle / 180)));
-                vector.x = ARROW_SPEED * cos((float)PI * (angle / 180));
+                vector.Y = -(double)ARROW_SPEED * (Math.Sin((double)Math.PI * (angle / 180)));
+                vector.X = (double)ARROW_SPEED * Math.Cos((double)Math.PI * (angle / 180));
 
 
 
-                if (event1.type == Event::Closed || Event::KeyPressed && event1.key.code == Keyboard::Escape)
+                if (event1.Type == EventType.Closed || Keyboard.IsKeyPressed && (event1.Key.Code == Keyboard.Key.Escape))
                     state = GameState.END;
                 //game escape
 
-                if (Event.KeyPressed && event1.key.code == Keyboard::Up)
+                if (Keyboard.IsKeyPressed && event1.Key.Code == Keyboard.Key.Up)
                 {
                     if (angle - 1.5 >= MAX_ANGLE)
                     {
@@ -164,52 +138,53 @@ namespace Project1
                         {
 
                             strzala.setAngle(angle); //lift bow  and arrow up
-                        
-
+                        }
+                    }}
                     
                 
 
-                if (Event::KeyPressed && event1.key.code == Keyboard::Down)
+                if (Keyboard.IsKeyPressed && event1.Key.Code == Keyboard.Key.Down)
                 {
                     if (angle + 1.5 <= MIN_ANGLE)
                     {
-                        angle += 1.5;
+                        angle += (float)1.5;
                         luk.setAngle(angle);
 
                         if (!strzala.ifReleased())
                         {
                             strzala.setAngle(angle); //lift bow and arrow down
-
-                        
+                        }   
+                    }
+                }        
                     
                 
 
-                if (Event.KeyPressed && event1.key.code == Keyboard::Space)
+                if (Keyboard.IsKeyPressed && event1.Key.Code == Keyboard.Key.Space)
                 {
 
                     strzala.release();
 
 
 
-                    if (strzala.aSprite.getPosition().x < 0 || strzala.aSprite.getPosition().x > window.getSize().x)
+                    if (strzala.getSprite().Position.X < 0 || strzala.getSprite().Position.X > window.Size.X)
                     {
                         strzala = null;
                         strzala = new Arrow(84, 340);
                         strzala.resetPosition();
                         strzala.setAngle(angle);
-                        window.draw(strzala.getSprite());
-                    
-                    if (strzala.aSprite.getPosition().y < 0 || strzala.aSprite.getPosition().y > window.getSize().y)
+                        window.Draw(strzala.getSprite());
+                        }
+                    if (strzala.getSprite().Position.Y < 0 || strzala.getSprite().Position.Y > window.Size.Y)
                     {
                         strzala = null;
                         strzala = new Arrow(84, 340);
                         strzala.resetPosition();
                         strzala.setAngle(angle);
-                        window.draw(strzala.getSprite());
-                    
+                        window.Draw(strzala.getSprite());
+                    }
 
-                
-
+                }
+            }
             
 
             if (Collision::PixelPerfectTest(strzala.getSprite(), obiekt.getSprite()))
@@ -222,124 +197,117 @@ namespace Project1
                 if (score % 3 == 0 && time > 1)
                     time--;
 
-
+                }
             
 
 
-            window.clear();
-            window.draw(backgroundSprite);
-            window.draw(gracz.getSpirte());
-            window.draw(luk.getSprite());
-            window.draw(strzala.getSprite());
+            window.Clear();
+            window.Draw(backgroundSprite);
+            window.Draw(gracz.getSpirte());
+            window.Draw(luk.getSprite());
+            window.Draw(strzala.getSprite());
 
             obiekt.objMove(3);
             //      if (a==0)
             //    {
-            if (obiekt.aSprite.getPosition().y < 600)
+            if (obiekt.getSprite().Position.Y < 600)
             {
 
                 obiekt.objMove(5 - time);
 
                 a++;
-
+                }
             
-            if (obiekt.aSprite.getPosition().y >= 600)
+            if (obiekt.getSprite().Position.Y >= 600)
             {
                 obiekt.resetPosition();
                 lives--;
                 if (lives == 0)
                     state = Game.GameState.GAME_OVER;
             
-
+                }
             
-            else if (czas(clock()) % time != 0) { a = 0; 
+     //       else if (czas() % time != 0) { a = 0; }
 
             if (strzala.ifReleased())
             {
 
-                strzala.aSprite.move(vector);
+                strzala.getSprite().Position = (vector + strzala.getSprite().Position);
             
+               }
 
+            window.Draw(strzala.getSprite());
+            window.Draw(obiekt.getSprite());
+            window.Draw(title);
+            window.Draw(punkty);
+            window.Display();
 
-            window.draw(strzala.getSprite());
-            window.draw(obiekt.getSprite());
-            window.draw(title);
-            window.draw(punkty);
-            window.display();
-
-            elapsed = mainClock.getElapsedTime(); //get time measured
-            sleep((milliseconds(1000 / FRAMERATE) - mainClock.getElapsedTime()));
+            elapsed = mainClock.ElapsedTime; //get time measured
+            Sleep((Time.FromMilliseconds(1000 / FRAMERATE) - mainClock.ElapsedTime));
 
             if (lives == 0)
                 state = GameState.GAME_OVER;
 
-        
+        }}
 
-        
-
-    void gameOver()
+        void gameOver()
         {
             Texture backgroundTexture =new Texture (@"jungle.png");
             backgroundSprite.Texture = (backgroundTexture); //load texture
-            Text title;
-            Text title2;
-            Text powrot;
-            title.setStyle(Bold);
-            title.setPosition(300, 50);
-            title.setString("Koniec Gry");
-            title.setFont((ConstFont)font);
-            title.setCharacterSize(40);
+            Text title = new Text();
+            Text title2 = new Text();
+            Text powrot = new Text();
+            title.Style = (Text.Styles.Bold);
+            title.Position = new Vector2f(300, 50);
+            title.DisplayedString = (@"Koniec Gry");
+            title.Font = (font);
+            title.CharacterSize = (40);
 
-            String points;
-            stringstream ss;
-            ss << score;
-            points += ss.str();
-            points += " punktow";
 
-            title2.setStyle(Text::Bold);
-            title2.setPosition(300, 190);
-            title2.setString(points);
-            title2.setFont(font);
-            title2.setCharacterSize(40);
+            title2.Style = (Text.Styles.Bold);
+            title2.Position = new Vector2f(300, 190);
+            title2.DisplayedString = new String(score + (string)" punktow");
+            title2.Font = (font);
+            title2.CharacterSize = (40);
 
-            powrot.setStyle(Text::Bold);
-            powrot.setPosition(325, 400);
-            powrot.setString("Powrot");
-            powrot.setFont(font);
-            powrot.setCharacterSize(40);
+            powrot.Style = (Text.Styles.Bold);
+            powrot.Position = new Vector2f(325.0, 400.0);
+            powrot.String = new String ("Powrot");
+            powrot.Font = (font);
+            powrot.CharacterSize = (40);
 
             while (state == GameState.GAME_OVER)
             {
-
-                Vector2f mouse(Mouse.getPosition window);
+             //TUTAJ MYSZKA NIE DZIAŁA
+             //   Vector2f mouse();
 
                 
-                while (window.WaitAndDispatchEvents())
+                while (window.IsOpen)
                                                                                     {
-                    if (event1.type == Event.Closed || Event::KeyPressed && event1.Code == Keyboard::Escape)
-                    state = END;
+                    if (event1.Type == EventType.Closed || Keyboard.IsKeyPressed && event1.Key == Keyboard.Key.Escape)
+                    state = GameState.END;
 
-                else if (powrot.getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased
-                        && event1.key.code == Mouse::Left)
-                    state = MENU;
+                else if (powrot.GetGlobalBounds().Contains(mouse) && event1.Type == Mouse.IsButtonPressed
+                        && event1.Key.Code == Mouse.Button.Left)
+                    state = GameState.MENU;
 
 
                 }
 
 
-                if (powrot.getGlobalBounds().contains(mouse))
-                    powrot.setColor(Red);
-                else powrot.setColor(White);
+                if (powrot.GetGlobalBounds().Contains(mouse))
+                    powrot.Color = (Color.Red);
+                else powrot.Color = (Color.White);
 
-                window.clear();
-                window.draw(title);
-                window.draw(title2);
-                window.draw(powrot);
-                window.setVisible(true);
+                window.Clear();
+                window.Draw(title);
+                window.Draw(title2);
+                window.Draw(powrot);
+                window.SetVisible(true);
 
-                window.display();
-            
-        
+                window.Display();
+            }
+        }
 
         void options()
           {
@@ -347,89 +315,85 @@ namespace Project1
             Text title1 = new Text("Archer The Game", font, 80);
             title1.Style = (Text.Styles.Bold);
             Text title2 = new Text("Options", font,60);
-            title1.Position = (800 / 2 - title1.getGlobalBounds().width / 2, 20);
-            title2.Position = (800 / 2 - title2.getGlobalBounds().width / 2, 120);
+            title1.Position = new Vector2f ((800 / 2) - title1.GetGlobalBounds().Width / 2, 20);
+            title2.Position = new Vector2f ((800 / 2) - title2.GetGlobalBounds().Width / 2, 120);
 
 
-            Text poziom;
-            Text powrot;
+            Text poziom = new Text();
+            Text powrot = new Text();
+
+            powrot.DisplayedString = ("Back");
 
             String[] str1 = { "Easy", "Normal", "Hard" };
 
-            poziom.setFont((ConstFont)font);
-            poziom.setCharacterSize(65);
+            poziom.Font = (font);
+            poziom.CharacterSize = (65);
 
-            poziom.setString(str1[0]);
-            poziom.setPosition(800 / 2 - poziom.getGlobalBounds().width / 2, 250);
+            poziom.DisplayedString = (str1[0]);
+            poziom.Position = new Vector2f(800 / 2 - poziom.GetGlobalBounds().Width / 2, 250);
 
-            powrot.setFont((ConstFont)font);
-            powrot.setCharacterSize(65);
+            powrot.Font = (font);
+            powrot.CharacterSize = (65);
 
-            powrot.String = new Text("Back");
-            powrot.Position = (1280 / 2 - poziom.getGlobalBounds().width / 2, 250 + 2 * 120);
+            powrot.Position = new Vector2f(1280 / 2 - poziom.GetGlobalBounds().Width / 2, 250 + 2 * 120);
 
-            while (Game.state == Game.GameState.OPTIONS)
+            while (Game.state == GameState.OPTIONS)
             {
-                Vector2f mouse = new Vector2f(Mouse.GetPosition);
+                Vector2f mouse = new Vector2f(Mouse.GetPosition.x, Mouse.GetPosition.y);
 
                 Event event1;
 
-                while (window.WaitAndDispatchEvents() )
+                while (window.IsOpen )
                 {
-                    if (event1.type == Event::Closed || Event::KeyPressed && event1.key.code == Keyboard::Escape)
+                    if (event1.Type == window.Closed || Keyboard.IsKeyPressed && event1.Key.Code == Keyboard.Key.Escape)
                     Game.state = Game.GameState.END;
 
-                else if (powrot.getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased
-                        && event1.key.code == Mouse::Left)
-                    state = MENU;
+                else if (powrot.GetGlobalBounds().Contains(mouse) && event1.Type == Mouse.IsButtonPressed
+                        && event1.Key.Code == Mouse.Button.Left)
+                    state = GameState.MENU;
 
                 }
 
-                if (powrot.getGlobalBounds().contains(mouse))
+                if (powrot.GetGlobalBounds().Contains(mouse))
                     powrot.Color = (Color.Red);
                 else powrot.Color = (Color.White);
 
-                poziom.String = new String(str1[diff]);
+                poziom.DisplayedString = (str1[diff]);
 
                 if (poziom.GetGlobalBounds().Contains(mouse))
-                    poziom.setColor(Color::Red);
-                else poziom.setColor(Color::White);
+                    poziom.Color = (Color.Red);
+                else poziom.Color = (Color.White);
 
-                if (poziom.getGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased && event1.key.code == Mouse::Button.Left)
+                if (poziom.GetGlobalBounds().Contains(mouse) && event1.Type == Mouse.IsButtonPressed && event1.Key.Code == Mouse.Button.Left)
             {
                     if (diff == 2) diff = 0;
                     else diff++;
-                    poziom.setString(str1[diff]);
-                    poziom.setPosition(800 / 2 - poziom.getGlobalBounds().width / 2, 250);
+                    poziom.SetString(str1[diff]);
+                    poziom.Position = (800 / 2 - poziom.GetGlobalBounds().Width / 2, 250);
                 }
 
-                window.clear();
+                window.Clear();
 
-                window.draw(title1);
-                window.draw(title2);
-                window.draw(poziom);
-                window.draw(powrot);
+                window.Draw(title1);
+                window.Draw(title2);
+                window.Draw(poziom);
+                window.Draw(powrot);
 
-                window.display();
+                window.Display();
 
-
+}}
             
-
-
-
-        
-
         void Menu()
         { 
 
 
 
             Text title = new Text("Archer The Game",font,80);
-            title.setStyle(Bold);
+            title.SetStyle(Text.Styles.Bold);
 
             // cout<<diff<<endl;
 
-            title.setPosition(800 / 2 - title.getGlobalBounds().width / 2, 20);
+            title.SetPosition(800 / 2 - title.GetGlobalBounds().width / 2, 20);
 
             const int ile = 3;
 
@@ -445,11 +409,11 @@ namespace Project1
             {
 
 
-                tekst[i].setFont(font);
-                tekst[i].setCharacterSize(65);
+                tekst[i].SetFont(font);
+                tekst[i].SetCharacterSize(65);
 
-                tekst[i].setString(str[i]);
-                tekst[i].setPosition(1280 / 2 - tekst[i].getGlobalBounds().width / 2, 250 + i * 120);
+                tekst[i].SetString(str[i]);
+                tekst[i].SetPosition(1280 / 2 - tekst[i].GetGlobalBounds().Width / 2, 250 + i * 120);
 
             }
 
@@ -458,42 +422,80 @@ namespace Project1
 
                 Event event1;
 
-                Vector2f mouse(Mouse::getPosition window);
+                Vector2f mouse(Mouse.GetPosition window);
 
-                while (window.WaitAndDispatchEvents())
+                while (window.IsOpen)
                                                                                                     {
-                    if (event1.type == Event::Closed || Event::KeyPressed && event1.key.code == Keyboard::Escape)
-                    state = END;
+                    if (event1.Type == window.Closed || Keyboard.IsKeyPressed && event1.Key== Keyboard.Key.Escape)
+                    state = GameState.END;
 
-                else if (tekst[2].etGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased
-                        && event1.key.code == Mouse::Left)
-                    state = END;
-                    if (tekst[0].GetGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased && event1.key.code == Mouse::Left)
-                    state = GAME;
-                    if (tekst[1].GetGlobalBounds().contains(mouse) && event1.type == Event::MouseButtonReleased && event1.key.code == Mouse::Left)
-                    state = OPTIONS;
+                else if (tekst[2].GetGlobalBounds().Contains(mouse) && event1.Type == Mouse.IsButtonPressed
+                        && event1.Key.Code == Mouse.Button.Left)
+                    state = GameState.END;
+                    if (tekst[0].GetGlobalBounds().contains(mouse) && event1.Type == Mouse.IsButtonPressed && event1.Key.Code == Mouse.Button.Left)
+                    state = GameState.GAME;
+                    if (tekst[1].GetGlobalBounds().contains(mouse) && event1.Type == Mouse.IsButtonPressed && event1.Key.Code == Mouse.Button.Left)
+                    state = GameState.OPTIONS;
 
                 }
                 for (int i = 0; i < ile; i++)
-                    if (tekst[i].getGlobalBounds().contains(mouse))
-                        tekst[i].setColor(Color::Red);
-                    else tekst[i].setColor(Color::White);
+                    if (tekst[i].GetGlobalBounds().Contains(mouse))
+                        tekst[i].SetColor(Color.Red);
+                    else tekst[i].SetColor(Color.White);
 
-                window.clear();
+                window.Clear();
 
-                window.draw(title);
+                window.Draw(title);
                 for (int i = 0; i < ile; i++)
-                    window.draw(tekst[i]);
-                window.display();
+                    window.Draw(tekst[i]);
+                window.Display();
             
 
         
 
-         int czas (clock_t t)
-         {
-            return static_cast<int>(t) / CLOCKS_PER_SEC;
-         }
-
+         
     }
 }
-}}}}}}}}}}}}}}}}}}}}}}}
+
+         void runGame()
+        {
+
+        while (state != GameState.END)
+        {
+            switch (state)
+            {
+                case GameState.MENU:
+                    Menu();
+                    break;
+                case GameState.GAME:
+                    gameStart();
+                    break;
+                case GameState.OPTIONS:
+                    options();
+                    break;
+                case GameState.GAME_OVER:
+                    gameOver();
+                    break;
+
+            }
+        }
+
+         }
+
+         
+   
+
+       
+}}
+
+
+
+
+
+
+
+
+
+
+
+
